@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Family Finance Manager — AI-powered budgeting, insights, and savings tools for your family." />
+    <title>Family Finance Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <!-- Premium Aurora Background -->
+    <div class="ambient-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    
+    <div id="app">
+
+      <!-- Navigation -->
+      <nav class="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-wallet"></i>
+          <span>Finance<br>Manager</span>
+        </div>
+        <ul class="nav-links">
+          <li class="active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></li>
+          <li data-target="add-expense"><i class="fa-solid fa-plus-circle"></i><span>Add Expense</span></li>
+          <li data-target="budget"><i class="fa-solid fa-bullseye"></i><span>Budget</span></li>
+          <li data-target="insights"><i class="fa-solid fa-lightbulb"></i><span>Insights</span></li>
+          <li data-target="simulator"><i class="fa-solid fa-sliders"></i><span>Simulator</span></li>
+          <li data-target="gamification"><i class="fa-solid fa-medal"></i><span>Achievements</span></li>
+          <li data-target="ai-advisor"><i class="fa-solid fa-robot"></i><span>AI Advisor</span><span class="nav-badge">AI</span></li>
+          <li data-target="setup-profile"><i class="fa-solid fa-user-gear"></i><span>Financial Setup</span></li>
+        </ul>
+        <div class="user-profile">
+          <img src="https://ui-avatars.com/api/?name=The+Family&background=4facfe&color=fff&bold=true" alt="User">
+          <div class="info">
+            <span class="name">The Family</span>
+            <span class="role">Pro Plan</span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content Area -->
+      <main class="content-area">
+        
+        <!-- Dashboard Screen -->
+        <section id="dashboard" class="screen active-screen">
+          <header>
+            <div>
+              <h1>Dashboard</h1>
+              <p class="subtitle">Overview of your family finances</p>
+            </div>
+            <div class="header-actions">
+              <button id="theme-toggle" class="icon-btn" title="Toggle Deep Dark">
+                <i class="fa-solid fa-moon"></i>
+              </button>
+              <div class="ai-status-pill">
+                <span class="ai-dot"></span>
+                <span>AI Active</span>
+              </div>
+            </div>
+          </header>
+          
+          <div class="overview-cards">
+            <div class="glass-card stat-card">
+              <div class="card-icon blue"><i class="fa-solid fa-building-columns"></i></div>
+              <div class="card-info">
+                <span>Total Balance</span>
+                <h2 class="count-up" data-target="250000">₹0</h2>
+                <span class="card-trend positive"><i class="fa-solid fa-arrow-up"></i> +2.4% this month</span>
+              </div>
+            </div>
+            <div class="glass-card stat-card">
+              <div class="card-icon purple"><i class="fa-solid fa-arrow-trend-down"></i></div>
+              <div class="card-info">
+                <span>Total Expenses</span>
+                <h2 class="count-up" data-target="45000">₹0</h2>
+                <span class="card-trend negative"><i class="fa-solid fa-arrow-up"></i> +5.1% this month</span>
+              </div>
+            </div>
+            <div class="glass-card stat-card">
+              <div class="card-icon green"><i class="fa-solid fa-heart-pulse"></i></div>
+              <div class="card-info">
+                <span>Health Score</span>
+                <h2 class="score-text">85 / 100</h2>
+                <span class="card-trend positive"><i class="fa-solid fa-arrow-up"></i> +3 pts last week</span>
+              </div>
+            </div>
+            <div class="glass-card stat-card ai-predict-card">
+              <div class="card-icon gold"><i class="fa-solid fa-calendar-days"></i></div>
+              <div class="card-info">
+                <span>Predicted Bills</span>
+                <h2 id="predicted-total">₹0</h2>
+                <span class="card-trend neutral">Based on AI prediction</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Bill Prediction Card -->
+          <div class="glass-card ai-bill-card">
+            <div class="ai-card-header">
+              <div class="ai-icon-badge"><i class="fa-solid fa-robot"></i></div>
+              <div>
+                <h3>Predicted Bills — Next 30 Days</h3>
+                <p class="subtitle">AI-analyzed based on your spending history</p>
+              </div>
+            </div>
+            <div class="bill-predictions" id="bill-predictions">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="glass-card chart-container">
+              <h3>Category Spending</h3>
+              <div class="pie-chart-wrapper">
+                <canvas id="categoryChart"></canvas>
+                <div class="chart-legend">
+                  <div class="legend-item"><span class="dot c-housing"></span> Housing (40%)</div>
+                  <div class="legend-item"><span class="dot c-food"></span> Food (25%)</div>
+                  <div class="legend-item"><span class="dot c-transport"></span> Transport (15%)</div>
+                  <div class="legend-item"><span class="dot c-entertainment"></span> Ent. (20%)</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card transactions-container">
+              <div class="section-header-row">
+                <h3>Recent Transactions</h3>
+                <button class="chip-btn" id="add-tx-shortcut"><i class="fa-solid fa-plus"></i> Add</button>
+              </div>
+              <ul class="transaction-list" id="transaction-list">
+                <li>
+                  <div class="t-info">
+                    <div class="t-icon bg-food"><i class="fa-solid fa-utensils"></i></div>
+                    <div>
+                      <span class="t-title">Whole Foods</span>
+                      <span class="t-date">Today, 2:30 PM</span>
+                    </div>
+                  </div>
+                  <span class="t-amount negative">-₹1,200</span>
+                </li>
+                <li>
+                  <div class="t-info">
+                    <div class="t-icon bg-housing"><i class="fa-solid fa-house"></i></div>
+                    <div>
+                      <span class="t-title">Rent Payment</span>
+                      <span class="t-date">Yesterday</span>
+                    </div>
+                  </div>
+                  <span class="t-amount negative">-₹25,000</span>
+                </li>
+                <li>
+                  <div class="t-info">
+                    <div class="t-icon bg-income"><i class="fa-solid fa-briefcase"></i></div>
+                    <div>
+                      <span class="t-title">Salary Deposit</span>
+                      <span class="t-date">Apr 15</span>
+                    </div>
+                  </div>
+                  <span class="t-amount positive">+₹75,000</span>
+                </li>
+                <li>
+                  <div class="t-info">
+                    <div class="t-icon bg-transport"><i class="fa-solid fa-car"></i></div>
+                    <div>
+                      <span class="t-title">Gas Station</span>
+                      <span class="t-date">Apr 14</span>
+                    </div>
+                  </div>
+                  <span class="t-amount negative">-₹2,500</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Add Expense Screen -->
+        <section id="add-expense" class="screen">
+          <header>
+            <h1>Add Expense</h1>
+            <p class="subtitle">Record a new transaction</p>
+          </header>
+          <div class="form-container glass-card">
+            <div class="amount-display">
+              <span class="currency">₹</span>
+              <input type="number" id="expense-amount" placeholder="0.00" step="0.01">
+            </div>
+            
+            <div class="form-group">
+              <label>Select Category</label>
+              <div class="category-grid">
+                <div class="cat-option active" data-cat="food"><i class="fa-solid fa-utensils"></i><span>Food</span></div>
+                <div class="cat-option" data-cat="housing"><i class="fa-solid fa-house"></i><span>Housing</span></div>
+                <div class="cat-option" data-cat="transport"><i class="fa-solid fa-car"></i><span>Transport</span></div>
+                <div class="cat-option" data-cat="entertainment"><i class="fa-solid fa-film"></i><span>Entertain</span></div>
+                <div class="cat-option" data-cat="health"><i class="fa-solid fa-heart-pulse"></i><span>Health</span></div>
+                <div class="cat-option" data-cat="shopping"><i class="fa-solid fa-bag-shopping"></i><span>Shopping</span></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Note (Optional)</label>
+              <div class="input-ai-wrap">
+                <input type="text" id="expense-note" class="text-input" placeholder="What was this for?">
+                <div class="ai-suggest-pill" id="ai-suggest-pill" style="display:none;">
+                  <i class="fa-solid fa-robot"></i>
+                  <span id="ai-suggest-text">AI: Suggest category</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Date</label>
+              <input type="date" id="expense-date" class="text-input">
+            </div>
+
+            <button class="primary-btn pulse-btn" id="add-expense-btn"><i class="fa-solid fa-plus"></i> Add Transaction</button>
+          </div>
+        </section>
+
+        <!-- Budget Screen -->
+        <section id="budget" class="screen">
+          <header>
+            <h1>Budget Tracker</h1>
+            <p class="subtitle">Monitor your spending limits</p>
+          </header>
+          <div class="budget-list">
+            <div class="glass-card budget-item">
+              <div class="budget-header">
+                <div class="budget-title"><div class="t-icon bg-food"><i class="fa-solid fa-utensils"></i></div> Groceries</div>
+                <div class="budget-amounts"><span>₹4,500</span> / ₹6,000</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill warning" style="width: 75%"></div></div>
+              <p class="budget-status">You've used 75% of your budget</p>
+            </div>
+            <div class="glass-card budget-item">
+              <div class="budget-header">
+                <div class="budget-title"><div class="t-icon bg-entertainment"><i class="fa-solid fa-film"></i></div> Entertainment</div>
+                <div class="budget-amounts"><span>₹2,800</span> / ₹3,000</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill danger" style="width: 93%"></div></div>
+              <p class="budget-status">Careful! You're almost at your limit</p>
+            </div>
+            <div class="glass-card budget-item">
+              <div class="budget-header">
+                <div class="budget-title"><div class="t-icon bg-transport"><i class="fa-solid fa-car"></i></div> Transport</div>
+                <div class="budget-amounts"><span>₹1,200</span> / ₹4,000</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill good" style="width: 30%"></div></div>
+              <p class="budget-status">Looking good! 30% used</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Insights Screen -->
+        <section id="insights" class="screen">
+          <header>
+            <h1>Smart Insights</h1>
+            <p class="subtitle">AI-powered suggestions for your family</p>
+          </header>
+
+          <!-- Health Score Deep Dive -->
+          <div class="glass-card health-deep-dive">
+            <div class="health-score-row">
+              <div class="big-score-ring">
+                <svg viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="42" class="ring-bg"/>
+                  <circle cx="50" cy="50" r="42" class="ring-fill" style="stroke-dashoffset: calc(264 - 264 * 0.85)"/>
+                </svg>
+                <div class="ring-text">
+                  <span class="ring-number">85</span>
+                  <span class="ring-label">/ 100</span>
+                </div>
+              </div>
+              <div class="health-breakdown">
+                <h3>Financial Health Score</h3>
+                <p class="subtitle">Based on budget adherence, savings rate & spending patterns</p>
+                <div class="health-factors">
+                  <div class="health-factor">
+                    <span>Budget Adherence</span>
+                    <div class="mini-bar"><div class="mini-fill good" style="width:82%"></div></div>
+                    <span class="factor-score good-text">82%</span>
+                  </div>
+                  <div class="health-factor">
+                    <span>Savings Rate</span>
+                    <div class="mini-bar"><div class="mini-fill warning" style="width:71%"></div></div>
+                    <span class="factor-score warning-text">71%</span>
+                  </div>
+                  <div class="health-factor">
+                    <span>Debt Ratio</span>
+                    <div class="mini-bar"><div class="mini-fill good" style="width:90%"></div></div>
+                    <span class="factor-score good-text">90%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="glass-card wealth-projection-card" style="margin-bottom: 32px;">
+            <h3>6-Month Wealth Projection</h3>
+            <p class="subtitle">Based on your current savings rate</p>
+            <div style="height: 200px; margin-top: 24px;">
+              <canvas id="wealthChart"></canvas>
+            </div>
+          </div>
+
+          <div class="insights-grid">
+            <div class="glass-card insight-card highlight">
+              <div class="insight-icon"><i class="fa-solid fa-lightbulb"></i></div>
+              <h3>Save on Subscriptions</h3>
+              <p>We noticed you haven't used your <strong>Gym Membership (₹2,500/mo)</strong> in 2 months. Consider pausing it to save <strong>₹30,000</strong> a year.</p>
+              <button class="secondary-btn">Review Subscriptions</button>
+            </div>
+            <div class="glass-card insight-card">
+              <div class="insight-icon good"><i class="fa-solid fa-arrow-trend-up"></i></div>
+              <h3>Great Job on Groceries!</h3>
+              <p>Your grocery spending is down <strong>12%</strong> compared to last month. Keep up the good meal planning!</p>
+            </div>
+            <div class="glass-card insight-card warning">
+              <div class="insight-icon danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <h3>Unusual Spend Alert</h3>
+              <p>Your transport category is tracking higher than usual due to a <strong>₹4,500</strong> car repair on Apr 10.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- What-If Simulator Screen -->
+        <section id="simulator" class="screen">
+          <header>
+            <h1>What-If Simulator</h1>
+            <p class="subtitle">See how small changes impact your savings</p>
+          </header>
+          <div class="simulator-container glass-card">
+            <div class="sim-header">
+              <h3>Reduce Dining Out</h3>
+              <p>Move the slider to see your potential yearly savings.</p>
+            </div>
+            
+            <div class="slider-container">
+              <div class="slider-labels">
+                <span>0%</span>
+                <span id="slider-val" class="highlight-text">20% Decrease</span>
+                <span>50%</span>
+              </div>
+              <input type="range" id="savings-slider" min="0" max="50" value="20" class="styled-slider">
+            </div>
+
+            <div class="sim-result">
+              <p>If you reduce this expense, you'll save an extra</p>
+              <h2 id="sim-savings" class="gradient-text">+₹0</h2>
+              <p class="per-year">per year</p>
+            </div>
+            <div class="sim-visual">
+              <div class="piggy-bank">
+                  <i class="fa-solid fa-piggy-bank"></i>
+                  <div class="coins"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Gamification Screen -->
+        <section id="gamification" class="screen">
+          <header>
+            <h1>Achievements</h1>
+            <p class="subtitle">Level up your financial habits</p>
+          </header>
+          
+          <div class="level-container glass-card">
+            <div class="level-badge">Lvl 4</div>
+            <div class="level-info">
+              <h3>Financial Ninja</h3>
+              <p>2,450 / 3,000 XP to Level 5</p>
+              <div class="progress-bar"><div class="progress-fill xp" style="width: 81%"></div></div>
+            </div>
+          </div>
+
+          <h3 class="section-title">Your Badges</h3>
+          <div class="badges-grid">
+            <div class="badge-card glass-card unlocked">
+              <div class="badge-icon"><i class="fa-solid fa-fire"></i></div>
+              <h4>Hot Streak</h4>
+              <p>Stayed under budget for 3 consecutive months.</p>
+            </div>
+            <div class="badge-card glass-card unlocked">
+              <div class="badge-icon"><i class="fa-solid fa-piggy-bank"></i></div>
+              <h4>Super Saver</h4>
+              <p>Saved over ₹50,000 in a single month.</p>
+            </div>
+            <div class="badge-card glass-card locked">
+              <div class="badge-icon"><i class="fa-solid fa-lock"></i></div>
+              <h4>Debt Free</h4>
+              <p>Pay off the remaining car loan balance.</p>
+              <div class="progress-bar mini"><div class="progress-fill" style="width: 40%"></div></div>
+            </div>
+            <div class="badge-card glass-card locked">
+              <div class="badge-icon"><i class="fa-solid fa-lock"></i></div>
+              <h4>Investment Guru</h4>
+              <p>Contribute ₹5 Lakhs to investments.</p>
+              <div class="progress-bar mini"><div class="progress-fill" style="width: 15%"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AI Advisor Screen -->
+        <section id="ai-advisor" class="screen">
+          <header>
+            <h1>AI Financial Advisor</h1>
+            <p class="subtitle">Your personal AI-powered family finance coach</p>
+          </header>
+
+          <div class="ai-advisor-layout">
+            <!-- Quick Actions -->
+            <div class="ai-quick-actions">
+              <h3>Quick Questions</h3>
+              <div class="quick-chips">
+                <button class="quick-chip" data-prompt="How can I improve my health score?"><i class="fa-solid fa-heart-pulse"></i> Improve Health Score</button>
+                <button class="quick-chip" data-prompt="What are my biggest spending categories?"><i class="fa-solid fa-chart-pie"></i> Spending Breakdown</button>
+                <button class="quick-chip" data-prompt="How much should I save each month?"><i class="fa-solid fa-piggy-bank"></i> Savings Goal</button>
+                <button class="quick-chip" data-prompt="Am I on track for the month?"><i class="fa-solid fa-check-circle"></i> Monthly Check-in</button>
+                <button class="quick-chip" data-prompt="Give me 3 tips to reduce expenses"><i class="fa-solid fa-lightbulb"></i> Expense Tips</button>
+                <button class="quick-chip" data-prompt="Analyze my budget performance"><i class="fa-solid fa-bullseye"></i> Budget Analysis</button>
+              </div>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="glass-card chat-card">
+              <div class="chat-header">
+                <div class="ai-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div>
+                  <span class="chat-name">Finley</span>
+                  <span class="chat-tagline">Your AI Finance Coach</span>
+                </div>
+                <div class="ai-status-dot"></div>
+              </div>
+              <div class="chat-messages" id="chat-messages">
+                <div class="message ai-message">
+                  <div class="msg-bubble">
+                    <p>👋 Hi! I'm <strong>Finley</strong>, your AI financial advisor. I've analyzed your family's financial data and I'm ready to help.</p>
+                  </div>
+                  <span class="msg-time">Now</span>
+                </div>
+              </div>
+              <div class="chat-input-area">
+                <input type="text" id="chat-input" class="text-input chat-text-input" placeholder="Ask Finley about your finances...">
+                <button class="send-btn" id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Financial Setup Screen -->
+        <section id="setup-profile" class="screen">
+          <header>
+            <h1>Financial Setup</h1>
+            <p class="subtitle">Configure your real-time financial background</p>
+          </header>
+          
+          <div class="setup-grid">
+            <div class="glass-card setup-card">
+              <h3>Monthly Income</h3>
+              <p>Your total recurring family income (salary, business, etc.)</p>
+              <div class="input-with-icon">
+                <span class="currency-symbol">₹</span>
+                <input type="number" id="setup-salary" placeholder="e.g. 75000" class="text-input large-input">
+              </div>
+            </div>
+            
+            <div class="glass-card setup-card">
+              <h3>Initial Balance</h3>
+              <p>Your current bank balance across all family accounts</p>
+              <div class="input-with-icon">
+                <span class="currency-symbol">₹</span>
+                <input type="number" id="setup-balance" placeholder="e.g. 250000" class="text-input large-input">
+              </div>
+            </div>
+
+            <div class="glass-card setup-card full-width">
+              <button id="save-setup-btn" class="add-btn">
+                <i class="fa-solid fa-floppy-disk"></i> Save & Analyze
+              </button>
+              <p class="status-tip">AI Advisor will re-calculate your scores immediately.</p>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
