@@ -73,7 +73,7 @@ export const CategoryChart: React.FC = () => {
     }]
   };
 
-  const options = {
+  const options: any = {
     responsive: true,
     maintainAspectRatio: false,
     cutout: '75%',
@@ -81,7 +81,7 @@ export const CategoryChart: React.FC = () => {
       legend: { display: false },
       tooltip: {
         backgroundColor: 'rgba(5, 5, 12, 0.98)',
-        titleFont: { family: 'Poppins', size: 15, weight: '700' },
+        titleFont: { family: 'Poppins', size: 15, weight: 'bold' as const },
         bodyFont: { family: 'Inter', size: 14 },
         padding: 18,
         cornerRadius: 20,
@@ -134,7 +134,7 @@ export const WealthChart: React.FC = () => {
     }]
   };
 
-  const options = {
+  const options: any = {
     responsive: true,
     maintainAspectRatio: false,
     layout: { padding: { top: 20, bottom: 10 } },
@@ -147,7 +147,7 @@ export const WealthChart: React.FC = () => {
         grid: { display: false },
         ticks: { 
           color: 'rgba(255,255,255,0.5)',
-          font: { family: 'Poppins', size: 12, weight: '600' }
+          font: { family: 'Poppins', size: 12, weight: 'bold' as const }
         }
       }
     },
@@ -155,7 +155,7 @@ export const WealthChart: React.FC = () => {
       legend: { display: false },
       tooltip: {
         backgroundColor: 'rgba(5, 5, 12, 0.98)',
-        titleFont: { family: 'Poppins', size: 14, weight: '700' },
+        titleFont: { family: 'Poppins', size: 14, weight: 'bold' as const },
         bodyFont: { family: 'Inter', size: 14, weight: 'bold' },
         padding: 15,
         cornerRadius: 15,

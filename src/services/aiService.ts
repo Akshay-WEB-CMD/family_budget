@@ -1,4 +1,4 @@
-import type { Transaction, UserProfile } from '../store/useFinanceStore';
+import type { UserProfile } from '../store/useFinanceStore';
 
 const categoryKeywords: Record<string, string[]> = {
   food: ['lunch', 'dinner', 'breakfast', 'cafe', 'coffee', 'restaurant', 'pizza', 'burger', 'grocery', 'groceries', 'snack', 'meal', 'food', 'eat', 'sushi', 'takeout', 'swiggy', 'zomato'],
