@@ -1,5 +1,5 @@
 import { state, addTransaction, deleteTransaction } from './state';
-import { formatCurrency, formatCurrencyDetailed, formatDate } from './formatters';
+import { formatCurrencyDetailed, formatDate } from './formatters';
 import { predictCategory } from './ai';
 import { showToast } from './ui';
 
@@ -39,11 +39,14 @@ export function handleAddExpense(onUpdate: () => void) {
     const amount = parseFloat(amountInput.value);
     if (isNaN(amount) || amount <= 0) return;
     
+    const memberInput = document.getElementById('expense-member') as HTMLSelectElement;
+    
     addTransaction({
       amount,
       category: state.selectedCategory,
       note: noteInput.value || state.selectedCategory,
-      type: 'expense'
+      type: 'expense',
+      memberId: memberInput ? memberInput.value : state.activeMemberId
     });
 
     amountInput.value = '';
@@ -61,7 +64,14 @@ export function refreshTransactionList(onUpdate: () => void) {
   if (!list) return;
   list.innerHTML = '';
   
-  const displayList = [...state.transactions].reverse().slice(0, 6);
+  const activeMember = state.members.find(m => m.id === state.activeMemberId);
+  const isAdmin = activeMember ? (activeMember.role === 'father' || activeMember.role === 'mother') : true;
+
+  const filtered = isAdmin 
+    ? state.transactions 
+    : state.transactions.filter(tx => tx.memberId === state.activeMemberId);
+
+  const displayList = [...filtered].reverse().slice(0, 6);
   
   const icons: Record<string, string> = {
     food: 'fa-utensils', housing: 'fa-house', transport: 'fa-car',
